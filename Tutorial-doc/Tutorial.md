@@ -151,6 +151,9 @@ SELECT * FROM runtime_mysql_servers;
 SAVE MYSQL SERVERS TO DISK;
 SELECT * FROM disk.mysql_servers;
 SELECT * FROM runtime_mysql_servers;
+SHOW TABLES FROM monitor;
+SELECT * FROM mysql_server_read_only_log;
+SELECT * FROM mysql_server_replication_lag_log;
 ```
 
 Verify the same on other proxies.
@@ -160,7 +163,7 @@ SELECT * FROM stats_proxysql_servers_checksums WHERE name='mysql_servers';
 
 Verify monitor.
 ```
-SHOW TABLES FROM stats;
+SHOW TABLES FROM monitor;
 SELECT * FROM mysql_server_ping_log;
 SHOW VARIABLES LIKE '%mon%ping%';
 ```
@@ -178,6 +181,9 @@ SELECT * FROM runtime_mysql_replication_hostgroups;
 SELECT * FROM mysql_servers;
 SELECT * FROM runtime_mysql_servers;
 SELECT * FROM disk.mysql_servers;
+SHOW TABLES FROM monitor;
+SELECT * FROM mysql_server_read_only_log;
+SELECT * FROM mysql_server_replication_lag_log;
 ```
 
 
@@ -214,7 +220,7 @@ LOAD MYSQL SERVERS TO RUNTIME;
 SELECT * FROM stats_proxysql_servers_checksums;
 ```
 
-## Rewrite queries
+## Query rules
 
 ```
 mysql -uradmin -pradmin -h127.0.0.1 -P16032
@@ -398,4 +404,61 @@ docker-compose stop mysql1
 mysql -uradmin -pradmin -h127.0.0.1 --prompt 'Admin1> ' -P16032 -e "SELECT * FROM runtime_mysql_servers"
 ```
 
+
+
+
+
+## Processlist
+
+Use 2 connections.
+
+Terminal 1:
+
+````
+mysql -uroot -proot -h 127.0.0.1 -P16033 -e "SELECT SLEEP(20)"
+````
+
+Terminal 2:
+
+```
+mysql -uradmin -pradmin -h127.0.0.1 --prompt 'Admin1> ' -P16032
+```
+
+```
+SHOW PROCESSLIST;
+SHOW FULL PROCESSLIST;
+SHOW TABLES FROM stats;
+SELECT * FROM stats_mysql_processlist;
+SELECT * FROM stats_mysql_processlist WHERE command='Query' ORDER BY time_ms DESC LIMIT 1\G
+SELECT user, COUNT(*) FROM stats_mysql_processlist GROUP BY user;
+SELECT * FROM stats_mysql_users;
+```
+
+#### processlist extended_info - JSON
+
+```
+SHOW VARIABLES LIKE '%processlist%';
+SET mysql-show_processlist_extended=1;
+LOAD MYSQL VARIABLES TO RUNTIME;
+SELECT * FROM stats_mysql_processlist\G
+SET mysql-show_processlist_extended=1;
+LOAD MYSQL VARIABLES TO RUNTIME;
+SELECT * FROM stats_mysql_processlist\G
+```
+
+
+
+### JSON functions
+
+```
+SELECT SessionID, JSON_EXTRACT(extended_info,'$.conn.autocommit') autocommit, JSON_EXTRACT(extended_info,'$.conn.charset') charset , JSON_EXTRACT(extended_info,'$.backends[0].conn.mysql') mysql_backend FROM stats_mysql_processlist\G
+```
+
+
+
+### stats_mysql_free_connections
+
+```
+SELECT * FROM stats_mysql_free_connections\G
+```
 
