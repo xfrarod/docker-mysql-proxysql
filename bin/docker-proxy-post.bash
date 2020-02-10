@@ -2,7 +2,7 @@
 . constants
 printf "$YELLOW[$(date)] Waiting for ProxySQL service to initialize"
 RC=1
-while [ $RC -eq 1 ]
+while [ $RC -gt 1 ]
 do
   sleep 1
   printf "."
@@ -12,5 +12,7 @@ done
 printf "$LIME_YELLOW\n"
 
 printf "$POWDER_BLUE[$(date)] Configuring ProxySQL...$LIME_YELLOW\n"
+
+mysql -uradmin -pradmin -h127.0.0.1 -P16032 < $(pwd)/conf/proxysql/enable_cluster.sql
 
 mysql -uradmin -pradmin -h127.0.0.1 -P16032 < $(pwd)/conf/proxysql/config.sql

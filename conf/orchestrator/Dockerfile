@@ -18,7 +18,9 @@ RUN set -ex \
     && cd / \
     && apk del .build-deps \
     && rm -rf /tmp/* \
-    && mkdir -p /var/lib/orchestrator
+    && mkdir -p /var/lib/orchestrator \
+
+ENV PATH=$PATH:/usr/local/orchestrator/resources/bin/
 
 WORKDIR /usr/local/orchestrator
 CMD /usr/local/orchestrator/orchestrator http
