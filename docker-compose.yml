@@ -123,6 +123,7 @@ services:
       - mysql1
       - mysql2
       - mysql3
+      - consul_server
     networks:
       - frontend
       - backend

@@ -14,6 +14,10 @@ if [ "${1:0:1}" == '-' ]; then
 	CMDARG="$@"
 fi
 
+consul-template -consul-addr=consul_server:8500 -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" --once
+
+consul-template -consul-addr=consul_server:8500 -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" &
+
 if [ $MONITOR_CONFIG_CHANGE ]; then
 
 	echo 'Env MONITOR_CONFIG_CHANGE=true'
@@ -38,10 +42,6 @@ if [ $MONITOR_CONFIG_CHANGE ]; then
 		fi
 	done
 fi
-
-consul-template -consul-addr=consul_server:8500 -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" --once
-
-consul-template -consul-addr=consul_server:8500 -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" &
 
 # Start ProxySQL with PID 1
 exec proxysql -f $CMDARG
