@@ -4,19 +4,23 @@ set -e
 ## ProxySQL entrypoint
 ## ===================
 ##
-## Supported environment variable:
+## Supported environment variables:
 ##
 ## MONITOR_CONFIG_CHANGE={true|false}
 ## - Monitor /etc/proxysql.cnf for any changes and reload ProxySQL automatically
+##
+## CONSUL_SERVER_URL
+## - Consul server address
+##
+
+CONSUL_SERVER_URL="${CONSUL_SERVER_URL:-'consul_server:8500'}"
 
 # If command has arguments, prepend proxysql
 if [ "${1:0:1}" == '-' ]; then
 	CMDARG="$@"
 fi
 
-consul-template -consul-addr=consul_server:8500 -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" --once
-
-consul-template -consul-addr=consul_server:8500 -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" &
+consul-template -consul-addr=${CONSUL_SERVER_URL} -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" &
 
 if [ $MONITOR_CONFIG_CHANGE ]; then
 
@@ -28,7 +32,7 @@ if [ $MONITOR_CONFIG_CHANGE ]; then
 	proxysql --reload -f $CMDARG &
 
 	echo "Monitoring $CONFIG for changes.."
-	inotifywait -e modify,move,create,delete -m --timefmt '%d/%m/%y %H:%M' --format '%T' ${CONFIG} | \
+	inotifywait -m --timefmt '%d/%m/%y %H:%M' --format '%T' ${CONFIG} | \
 	while read date time; do
 		newcksum=$(cksum ${CONFIG})
 		if [ "$newcksum" != "$oldcksum" ]; then
@@ -37,7 +41,7 @@ if [ $MONITOR_CONFIG_CHANGE ]; then
 			echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 			oldcksum=$newcksum
 			echo "Reloading ProxySQL.."
-		        killall -15 proxysql
+				killall -15 proxysql
 			proxysql --initial --reload -f $CMDARG
 		fi
 	done

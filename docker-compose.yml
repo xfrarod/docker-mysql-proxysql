@@ -88,6 +88,7 @@ services:
       - backend
     environment:
       - MONITOR_CONFIG_CHANGE=true
+      - CONSUL_SERVER_URL=consul_server:8500
   proxysql2:
     build: ./conf/proxysql/
     image: proxysql:local
@@ -109,6 +110,7 @@ services:
       - backend
     environment:
       - MONITOR_CONFIG_CHANGE=true
+      - CONSUL_SERVER_URL=consul_server:8500
   proxysql3:
     build: ./conf/proxysql/
     image: proxysql:local
@@ -129,6 +131,7 @@ services:
       - backend
     environment:
       - MONITOR_CONFIG_CHANGE=true
+      - CONSUL_SERVER_URL=consul_server:8500
   orc1:
     build: ./conf/orchestrator/
     ports:
