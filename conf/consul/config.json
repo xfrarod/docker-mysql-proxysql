@@ -2,7 +2,7 @@
   "datacenter": "east-aws",
   "data_dir": "/opt/consul",
   "log_level": "INFO",
-  "node_name": "foobar",
+  "node_name": "consul_server",
   "server": true,
   "watches": [
     {
