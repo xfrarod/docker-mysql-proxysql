@@ -1,1 +1,42 @@
-{{ key "proxysql/config/proxysql.cnf" }}
+restart_on_missing_heartbeats=10
+datadir="/var/lib/proxysql"
+//execute_on_exit_failure="/path/to/script"
+
+admin_variables=
+{
+	admin_credentials="{{ key "proxysql/config/admin_variables/admin_credentials" }}"
+	mysql_ifaces="{{ key "proxysql/config/admin_variables/mysql_ifaces" }}"
+}
+
+mysql_variables=
+{
+	 threads={{ key "proxysql/config/mysql_variables/threads" }}
+	 max_connections={{ key "proxysql/config/mysql_variables/max_connections" }}
+	 default_query_delay={{ key "proxysql/config/mysql_variables/default_query_delay" }}
+	 default_query_timeout={{ key "proxysql/config/mysql_variables/default_query_timeout" }}
+	 have_compress={{ key "proxysql/config/mysql_variables/have_compress" }}
+	 poll_timeout={{ key "proxysql/config/mysql_variables/poll_timeout" }}
+	 interfaces="{{ key "proxysql/config/mysql_variables/interfaces" }}"
+	 default_schema="{{ key "proxysql/config/mysql_variables/default_schema" }}"
+	 stacksize={{ key "proxysql/config/mysql_variables/stacksize" }}
+	 server_version="{{ key "proxysql/config/mysql_variables/server_version" }}"
+	 connect_timeout_server={{ key "proxysql/config/mysql_variables/connect_timeout_server" }}
+	 monitor_username="{{ key "proxysql/config/mysql_variables/monitor_username" }}"
+	 monitor_password="{{ key "proxysql/config/mysql_variables/monitor_password" }}"
+	 monitor_history={{ key "proxysql/config/mysql_variables/monitor_history" }}
+	 monitor_connect_interval={{ key "proxysql/config/mysql_variables/monitor_connect_interval" }}
+	 monitor_ping_interval={{ key "proxysql/config/mysql_variables/monitor_ping_interval" }}
+	 monitor_read_only_interval={{ key "proxysql/config/mysql_variables/monitor_read_only_interval" }}
+	 monitor_read_only_timeout={{ key "proxysql/config/mysql_variables/monitor_read_only_timeout" }}
+	 ping_interval_server_msec={{ key "proxysql/config/mysql_variables/ping_interval_server_msec" }}
+	 ping_timeout_server={{ key "proxysql/config/mysql_variables/ping_timeout_server" }}
+	 commands_stats={{ key "proxysql/config/mysql_variables/commands_stats" }}
+	 sessions_sort={{ key "proxysql/config/mysql_variables/sessions_sort" }}
+	 connect_retries_on_failure={{ key "proxysql/config/mysql_variables/connect_retries_on_failure" }}
+}
+
+mysql_servers =
+{{ key "proxysql/config/mysql_servers.cnf" }}
+
+mysql_users:
+{{ key "proxysql/config/mysql_users.cnf" }}

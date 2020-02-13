@@ -70,14 +70,12 @@ services:
   proxysql1:
     build: ./conf/proxysql/
     image: proxysql:local
-#    image: renecannao/proxysql_205_pltx19:debian9
     ports:
       - "16033:6033"
       - "16032:6032"
       - "16080:6080"
     volumes:
       - ./conf/proxysql/:/usr/local/share/proxysql/
-#      - ./conf/proxysql/proxysql.cnf:/etc/proxysql.cnf
     depends_on:
       - mysql1
       - mysql2
@@ -92,13 +90,11 @@ services:
   proxysql2:
     build: ./conf/proxysql/
     image: proxysql:local
-#    image: renecannao/proxysql_205_pltx19:debian9
     ports:
       - "16043:6033"
       - "16042:6032"
     volumes:
       - ./conf/proxysql/:/usr/local/share/proxysql/
-#      - ./conf/proxysql/proxysql.cnf:/etc/proxysql.cnf
     depends_on:
       - mysql1
       - mysql2
@@ -114,13 +110,11 @@ services:
   proxysql3:
     build: ./conf/proxysql/
     image: proxysql:local
-#    image: renecannao/proxysql_205_pltx19:debian9
     ports:
       - "16053:6033"
       - "16052:6032"
     volumes:
       - ./conf/proxysql/:/usr/local/share/proxysql/
-#      - ./conf/proxysql/proxysql.cnf:/etc/proxysql.cnf
     depends_on:
       - mysql1
       - mysql2
@@ -177,17 +171,13 @@ services:
     networks:
       - backend
   consul_server:
-#    build: ./conf/consul/
     image: consul
-#    command:
-#      - /usr/local/share/consul/kv_data.sh
     ports:
       - "8500:8500"
       - "8600:8600/udp"
     volumes:
       - ./conf/consul/:/consul/config/
       - ./data/consul/:/consul/data/
-#    entrypoint: consul agent -server -ui -node=server-1 -bootstrap-expect=1 -client=0.0.0.0  
     networks:
       - backend
     environment:

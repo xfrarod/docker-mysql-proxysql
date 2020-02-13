@@ -31,3 +31,5 @@ consul kv put proxysql/config/mysql_variables/sessions_sort true
 consul kv put proxysql/config/mysql_variables/connect_retries_on_failure 10
 
 consul kv put proxysql/config/proxysql.cnf @/consul/config/initial_scripts/proxysql.cnf
+consul kv put proxysql/config/mysql_servers.cnf @/consul/config/initial_scripts/mysql_servers.cnf
+consul kv put proxysql/config/mysql_users.cnf @/consul/config/initial_scripts/mysql_users.cnf
