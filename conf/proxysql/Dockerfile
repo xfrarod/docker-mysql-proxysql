@@ -22,5 +22,4 @@ VOLUME /var/lib/proxysql
 EXPOSE 6032 6033 6080
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh /watch_config_change.sh
 ENTRYPOINT ["/entrypoint.sh"]

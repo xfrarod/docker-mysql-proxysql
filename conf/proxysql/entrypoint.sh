@@ -20,15 +20,18 @@ if [ "${1:0:1}" == '-' ]; then
     CMDARG="$@"
 fi
 
-consul-template -consul-addr=${CONSUL_SERVER_URL} -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" &
+consul-template -consul-addr=${CONSUL_SERVER_URL} -template "/usr/local/share/proxysql/proxysql.ctpl:/etc/proxysql.cnf" --once
+
+# Start ProxySQL in the background
+proxysql --reload -f $CMDARG &
 
 if [ $MONITOR_CONFIG_CHANGE ]; then
 
     echo 'Env MONITOR_CONFIG_CHANGE=true'
-    CONFIG=/etc/proxysql.cnf
+    CONFIG=/usr/local/share/proxysql/config.sql
+    CONFIG_CTPL=/usr/local/share/proxysql/config.sql.ctpl
 
-    # Start ProxySQL in the background
-    proxysql --reload -f $CMDARG &
+    nohup consul-template -consul-addr=${CONSUL_SERVER_URL} -template ${CONFIG_CTPL}:${CONFIG} &
 
     oldcksum=$(cksum ${CONFIG})
 
@@ -42,9 +45,8 @@ if [ $MONITOR_CONFIG_CHANGE ]; then
             echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++"
             oldcksum=$newcksum
 
-            echo "Reloading ProxySQL.."
-            killall -v -15 proxysql
-            proxysql --initial --reload -f $CMDARG &
+            echo "Reloading Configuration ProxySQL.."
+            mysql -uradmin -pradmin -h127.0.0.1 -P6032 < ${CONFIG}
         fi
     done
 fi
