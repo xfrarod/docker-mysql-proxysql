@@ -1,5 +1,5 @@
 FROM debian:stretch
-MAINTAINER Ashraf Sharif <ashraf@severalnines.com>
+MAINTAINER Francisco Rodriguez <frrodriguez@shutterfly.com>
 
 ENV VERSION 2.0.8
 
@@ -22,4 +22,5 @@ VOLUME /var/lib/proxysql
 EXPOSE 6032 6033 6080
 
 COPY entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
