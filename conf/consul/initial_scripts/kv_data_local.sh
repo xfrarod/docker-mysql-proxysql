@@ -4,6 +4,9 @@ printf "##########################\n"
 printf "# Configure KV on Consul #\n"
 printf "##########################\n"
 
+
+CONSUL_HTTP_ADDR="${CONSUL_HTTP_ADDR:-'consul.dev.thislife.com'}"
+
 consul kv put proxysql/config/admin_variables/admin_credentials "admin:admin;radmin:radmin"
 consul kv put proxysql/config/admin_variables/mysql_ifaces "0.0.0.0:6032"
 consul kv put proxysql/config/mysql_variables/threads 2
