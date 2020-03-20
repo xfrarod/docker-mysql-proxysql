@@ -1,11 +1,13 @@
-#!/bin/sh 
+#!/bin/sh
 
 printf "##########################\n"
 printf "# Configure KV on Consul #\n"
 printf "##########################\n"
 
 
-CONSUL_HTTP_ADDR="${CONSUL_HTTP_ADDR:-'consul.dev.thislife.com'}"
+export CONSUL_HTTP_ADDR="${CONSUL_HTTP_ADDR:-consul.dev.thislife.com}"
+
+echo "************** CONSUL_HTTP_ADDR = ${CONSUL_HTTP_ADDR}"
 
 consul kv put proxysql/config/admin_variables/admin_credentials "admin:admin;radmin:radmin"
 consul kv put proxysql/config/admin_variables/mysql_ifaces "0.0.0.0:6032"
