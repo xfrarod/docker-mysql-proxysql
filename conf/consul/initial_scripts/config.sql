@@ -7,10 +7,10 @@
 # 	4 - shard read only
 
 DELETE FROM mysql_servers;
-INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (1, 'database.beta.thislife.com', '9998');
-INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (2, 'database.beta.thislife.com', '9999');
-INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (3, 'database.beta.thislife.com', '10000');
-INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (4, 'database.beta.thislife.com', '12000');
+INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (1, 'database.dev.thislife.com', '9998');
+INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (2, 'database.dev.thislife.com', '9999');
+INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (3, 'database.dev.thislife.com', '10000');
+INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (4, 'database.dev.thislife.com', '12000');
 LOAD MYSQL SERVERS TO RUNTIME;
 SAVE MYSQL SERVERS TO DISK;
 
